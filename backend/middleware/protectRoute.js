@@ -22,7 +22,7 @@ const protectRoute = async (req, res, next) => {
     }
 
     // now after these checks we will get our user as needed in getting the userId in message
-    req.user = user
+    req.user = user;
 
     next();
 
