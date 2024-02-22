@@ -31,6 +31,8 @@ export const sendMessage = async (req, res) => {
     if (newMessage) {
       conversation.messages.push(newMessage._id);
     }
+
+    // SOCKET IO Programming
     // await conversation.save();
     // await newMessage.save();
 
@@ -40,6 +42,30 @@ export const sendMessage = async (req, res) => {
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error is sendMessage controller", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getMessages = async (req, res) => {
+  try {
+    const { id: userToChatId } = req.params;
+    const senderId = req.user._id;
+    // _id can get using the protectRoute functionality
+    const conversation = await Conversation.findOne({
+      participants: {
+        $all: [senderId, userToChatId],
+      },
+    }).populate("messages");
+    // conversation has only message ids so used the populate function of mongo
+    // actual messages
+
+    if (!conversation) {
+      return res.status(200).json([]);
+    }
+    const messages = conversation.messages;
+    res.status(200).json(messages);
+  } catch (error) {
+    console.log("Error is getMessages controller", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
