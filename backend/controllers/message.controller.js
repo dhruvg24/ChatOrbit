@@ -5,7 +5,7 @@ export const sendMessage = async (req, res) => {
   try {
     // get the content from req.body
     const { message } = req.body;
-    const { id: receiverId } = req.id;
+    const { id: receiverId } = req.params;
     const senderId = req.user._id;
     // cant directly get userId - using middleware can get the authorized user
 
@@ -31,6 +31,11 @@ export const sendMessage = async (req, res) => {
     if (newMessage) {
       conversation.messages.push(newMessage._id);
     }
+    // await conversation.save();
+    // await newMessage.save();
+
+    // optimisation can be if we save them parallely using promises
+    await Promise.all([conversation.save(), newMessage.save()]);
 
     res.status(201).json(newMessage);
   } catch (error) {
