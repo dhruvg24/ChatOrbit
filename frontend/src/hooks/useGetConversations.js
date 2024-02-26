@@ -11,7 +11,7 @@ const useGetConversations = () => {
       try {
         const res = await fetch("/api/v1/users");
         // this is an get request , options not needed
-        const data =  res.json();
+        const data = await res.json();
 
         if (data.error) {
           throw new Error(data.error);
