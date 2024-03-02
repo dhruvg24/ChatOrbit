@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Messages from "./Messages.jsx";
 import MessageInput from "./MessageInput.jsx";
 import { TiMessages } from "react-icons/ti";

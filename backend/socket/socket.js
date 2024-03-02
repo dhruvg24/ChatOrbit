@@ -16,6 +16,10 @@ const io = new Server(server, {
 })
 // on express server we added socket server
 
+export const getReceiverSocketId = (receiverId) => {
+    return userSocketMap[receiverId];
+}
+
 // getting online users
 const userSocketMap = {};
 // mapping {userId : socketId}

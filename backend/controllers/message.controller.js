@@ -1,5 +1,6 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { getReceiverSocketId } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -31,13 +32,23 @@ export const sendMessage = async (req, res) => {
     if (newMessage) {
       conversation.messages.push(newMessage._id);
     }
-
-    // SOCKET IO Programming
     // await conversation.save();
     // await newMessage.save();
 
     // optimisation can be if we save them parallely using promises
     await Promise.all([conversation.save(), newMessage.save()]);
+
+
+    // SOCKET IO Programming
+
+    const receiverSocketId = getReceiverSocketId(receiverId)
+
+    if(receiverSocketId){
+      // if user is online 
+      // we need to send this msg to this user only so instead of emit we use to
+      io.to(receiverSocketId).emit("newMessage", newMessage); 
+    }
+    
 
     res.status(201).json(newMessage);
   } catch (error) {
